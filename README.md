@@ -63,7 +63,7 @@ Sigue estos pasos para configurar el entorno de desarrollo:
 
 ```bash
 git clone <url-del-repositorio>
-cd Galley_Ionic_Express_Sequelize_3-main/backend
+cd Gallery App_Ionic_Express_Sequelize/backend
 ```
 
 **2. Instalar dependencias**
@@ -263,7 +263,7 @@ Sigue estos pasos para configurar el entorno de desarrollo:
 
 ```bash
 git clone <url-del-repositorio>
-cd Galley_Ionic_Express_Sequelize_3-main/frontend
+cd Gallery App_Ionic_Express_Sequelize/frontend
 ```
 
 **2. Instalar dependencias**

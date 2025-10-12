@@ -1,0 +1,58 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="glass-toolbar">
+    <ion-title class="futuristic-title">
+      <ion-icon name="images-outline" class="title-icon"></ion-icon>
+      Mis Galerías
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="futuristic-bg">
+  
+  <div class="content-wrapper">
+    
+    <!-- Empty State -->
+    <div *ngIf="!loading && galleries.length === 0" class="empty-state">
+      <div class="empty-icon-wrapper">
+        <ion-icon name="images-outline" class="empty-icon"></ion-icon>
+      </div>
+      <h2 class="empty-title">No tienes galerías</h2>
+      <p class="empty-text">Crea tu primera galería para comenzar a organizar tus imágenes</p>
+      <ion-button class="create-btn" (click)="createGallery()">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Crear Galería
+      </ion-button>
+    </div>
+
+    <!-- Galleries Grid -->
+    <div *ngIf="galleries.length > 0" class="galleries-container">
+      <div class="gallery-card" *ngFor="let gallery of galleries" (click)="openGallery(gallery.id)">
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="gallery-preview">
+            <ion-icon *ngIf="!gallery.images || gallery.images.length === 0" name="image-outline" class="preview-icon"></ion-icon>
+            <img *ngIf="gallery.images && gallery.images.length > 0" 
+                 [src]="'http://localhost:8080/uploads/' + gallery.images[0].imageFile" 
+                 class="preview-img" />
+          </div>
+          <div class="gallery-info">
+            <h3 class="gallery-name">{{ gallery.name }}</h3>
+            <p class="gallery-count">{{ gallery.images?.length || 0 }} imágenes</p>
+          </div>
+          <ion-button fill="clear" class="menu-btn" (click)="openGalleryMenu(gallery, $event)">
+            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAB Button -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="galleries.length > 0">
+    <ion-fab-button class="fab-futuristic" (click)="createGallery()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

@@ -1,0 +1,190 @@
+.futuristic-bg {
+  --background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+.glass-toolbar {
+  --background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  --border-width: 0 0 1px 0;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.futuristic-title {
+  font-weight: 700;
+  font-size: 1.4rem;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  font-size: 1.8rem;
+  color: #00d4ff;
+}
+
+.content-wrapper {
+  padding: 20px;
+  min-height: 100%;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.empty-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 47, 247, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+.empty-icon {
+  font-size: 60px;
+  color: #00d4ff;
+}
+
+.empty-title {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.empty-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin-bottom: 30px;
+  max-width: 300px;
+}
+
+.create-btn {
+  --background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  --border-radius: 25px;
+  font-weight: 600;
+  text-transform: none;
+  height: 50px;
+  padding: 0 30px;
+}
+
+.galleries-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding-bottom: 80px;
+}
+
+.gallery-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(123, 47, 247, 0.3));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-content {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.gallery-preview {
+  width: 100%;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preview-icon {
+  font-size: 80px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-info {
+  padding: 15px 20px;
+}
+
+.gallery-name {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.gallery-count {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.menu-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  --color: #fff;
+  --background: transparent;
+  --background-activated: rgba(0, 0, 0, 0.5);
+  --background-hover: rgba(0, 0, 0, 0.3);
+  --border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  
+  ion-icon {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    padding: 8px;
+  }
+}
+
+.fab-futuristic {
+  --background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+  --box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}

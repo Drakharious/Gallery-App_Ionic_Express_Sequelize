@@ -20,7 +20,7 @@ Aplicación completa para gestión de galerías de imágenes con diseño futuris
 ```bash
 cd backend
 npm install
-# Configurar .env con credenciales MySQL
+# Configurar .env con credenciales MySQL y JWT_SECRET
 npm start
 ```
 
@@ -33,6 +33,17 @@ ionic serve
 ```
 
 3. **Abrir:** http://localhost:8100
+4. **Registrarse:** Crea tu cuenta de usuario para acceder a la aplicación
+
+## 🔐 Sistema de Autenticación
+
+La aplicación ahora incluye un sistema completo de autenticación:
+
+- **Registro de usuarios** con encriptación de contraseñas (bcrypt)
+- **Login con JWT tokens** (Bearer authentication)
+- **Rutas protegidas** - Solo usuarios autenticados pueden acceder
+- **Gestión de perfil** - Editar datos de usuario
+- **Sesiones persistentes** - El token se guarda en localStorage
 
 ---
 
@@ -100,7 +111,14 @@ PORT=8080
 NODE_ENV=development
 CORS_ORIGIN=http://localhost:8100
 LOG_LEVEL=info
+
+JWT_SECRET=GalleriesApp2024SecretKeyForJWTTokensDoNotShare
 ```
+
+**Nota sobre JWT_SECRET:** Esta es una clave secreta que usa la aplicación para firmar los tokens de autenticación. Puedes usar cualquier texto largo y único. **NO es la contraseña de MySQL**. Ejemplos válidos:
+- `GalleriesApp2024SecretKeyForJWTTokensDoNotShare`
+- `miClaveSecretaSuperLarga123456789`
+- O genera una aleatoria con: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
 
 **5. Iniciar el servidor**
 
@@ -141,12 +159,40 @@ backend/
 
 **📮 Colección de Postman (Imágenes):** [Probar APIs de Imágenes en Postman](https://www.postman.com/descent-module-candidate-42493728/workspace/adrian-s-workspace/collection/37496489-289a7a84-e3c0-499a-93b4-33bd5640a9be?action=share&creator=37496489)
 
+**🔒 Nota:** Todas las rutas (excepto Auth) requieren autenticación con JWT token en el header: `Authorization: Bearer <token>`
+
+### Autenticación
+
+- **POST** `/api/auth/register` - Registrar nuevo usuario
+  - Body: `{ "name": "Nombre", "email": "email@example.com", "password": "contraseña" }`
+  - Devuelve: `{ "token": "jwt_token", "user": {...} }`
+- **POST** `/api/auth/login` - Iniciar sesión
+  - Body: `{ "email": "email@example.com", "password": "contraseña" }`
+  - Devuelve: `{ "token": "jwt_token", "user": {...} }`
+- **GET** `/api/auth/me` - Obtener usuario actual (requiere token)
+
+### Usuarios
+
+- **PUT** `/api/users/:id` - Actualizar perfil de usuario
+  - Body: `{ "name": "Nuevo Nombre", "email": "nuevo@email.com" }`
+- **DELETE** `/api/users/:id` - Eliminar cuenta de usuario
+
+### Categorías
+
+- **POST** `/api/categories` - Crear categoría
+  - Body: `{ "name": "Mi Categoría", "description": "Descripción" }`
+- **GET** `/api/categories` - Listar categorías del usuario
+- **GET** `/api/categories/:id` - Obtener categoría específica
+- **PUT** `/api/categories/:id` - Actualizar categoría
+  - Body: `{ "name": "Nuevo Nombre", "description": "Nueva Descripción" }`
+- **DELETE** `/api/categories/:id` - Eliminar categoría
+
 ### Galerías
 
 - **POST** `/api/galleries` - Crear galería
-  - Body: `{ "name": "Mi Galería" }`
-- **GET** `/api/galleries` - Listar galerías (con paginación)
-  - Query params: `?page=1&limit=10`
+  - Body: `{ "name": "Mi Galería", "categoryId": 1 }` (categoryId opcional)
+- **GET** `/api/galleries` - Listar galerías del usuario (con paginación y filtro)
+  - Query params: `?page=1&limit=100&categoryId=1` (categoryId opcional)
 - **GET** `/api/galleries/:id` - Obtener galería con sus imágenes
 - **PUT** `/api/galleries/:id` - Actualizar galería
   - Body: `{ "name": "Nuevo Nombre" }`
@@ -181,6 +227,10 @@ backend/
 - ✅ CORS configurable
 - ✅ Paginación en listados
 - ✅ Relación 1:N entre galerías e imágenes
+- ✅ **Autenticación JWT** con tokens Bearer
+- ✅ **Encriptación de contraseñas** con bcrypt
+- ✅ **Middleware de autenticación** en rutas protegidas
+- ✅ **Sistema multi-usuario** - Cada usuario ve solo sus datos
 
 ## Construido con 🛠️
 
@@ -191,13 +241,35 @@ backend/
 - [Helmet](https://helmetjs.github.io/) - Seguridad HTTP
 - [Express Validator](https://express-validator.github.io/) - Validación de datos
 - [Express Rate Limit](https://github.com/express-rate-limit/express-rate-limit) - Rate limiting
+- [JSON Web Token](https://github.com/auth0/node-jsonwebtoken) - Autenticación JWT
+- [Bcrypt.js](https://github.com/dcodeIO/bcrypt.js) - Encriptación de contraseñas
 
 ## Modelo de Datos 📊
+
+### User
+
+- `id` (INTEGER, PK, AUTO_INCREMENT)
+- `name` (STRING, NOT NULL)
+- `email` (STRING, UNIQUE, NOT NULL)
+- `password` (STRING, NOT NULL) - Encriptado con bcrypt
+- `createdAt` (DATE)
+- `updatedAt` (DATE)
+
+### Category
+
+- `id` (INTEGER, PK, AUTO_INCREMENT)
+- `name` (STRING, NOT NULL)
+- `description` (TEXT)
+- `userId` (INTEGER, FK → User.id)
+- `createdAt` (DATE)
+- `updatedAt` (DATE)
 
 ### Gallery
 
 - `id` (INTEGER, PK, AUTO_INCREMENT)
 - `name` (STRING, NOT NULL)
+- `userId` (INTEGER, FK → User.id)
+- `categoryId` (INTEGER, FK → Category.id, nullable)
 - `createdAt` (DATE)
 - `updatedAt` (DATE)
 
@@ -212,6 +284,15 @@ backend/
 - `createdAt` (DATE)
 - `updatedAt` (DATE)
 
+### Relaciones
+
+```
+User (1) → (N) Categories
+User (1) → (N) Galleries
+Category (1) → (N) Galleries
+Gallery (1) → (N) Images
+```
+
 ## Scripts disponibles 📌
 
 ```bash
@@ -221,6 +302,10 @@ npm run dev     # Inicia el servidor con nodemon (auto-reload)
 
 ## Seguridad 🔐
 
+- **Autenticación JWT** - Tokens seguros con expiración de 7 días
+- **Encriptación de contraseñas** - Bcrypt con salt rounds = 10
+- **Middleware de autenticación** - Verifica tokens en todas las rutas protegidas
+- **Aislamiento de datos** - Cada usuario solo accede a sus propios recursos
 - Variables de entorno protegidas (`.env` en `.gitignore`)
 - Helmet para headers HTTP seguros
 - Rate limiting para prevenir ataques
@@ -295,11 +380,20 @@ La aplicación estará corriendo en `http://localhost:8100`
 frontend/
 ├── src/
 │   ├── app/
+│   │   ├── login/                   # Página de login/registro
 │   │   ├── home/                    # Página principal (lista de galerías)
 │   │   ├── gallery-detail/          # Detalle de galería (imágenes)
+│   │   ├── categories/              # Gestión de categorías
+│   │   ├── profile/                 # Perfil de usuario
 │   │   ├── services/                # Servicios HTTP
+│   │   │   ├── auth.service.ts      # Servicio de autenticación
+│   │   │   ├── user.service.ts      # Servicio de usuarios
+│   │   │   ├── category.service.ts  # Servicio de categorías
 │   │   │   ├── gallery.service.ts   # Servicio de galerías
-│   │   │   └── image.service.ts     # Servicio de imágenes
+│   │   │   ├── image.service.ts     # Servicio de imágenes
+│   │   │   └── auth.interceptor.ts  # Interceptor HTTP para JWT
+│   │   ├── guards/                  # Guards de navegación
+│   │   │   └── auth.guard.ts        # Guard de autenticación
 │   │   ├── app-routing.module.ts    # Configuración de rutas
 │   │   └── app.module.ts            # Módulo principal
 │   ├── assets/                      # Recursos estáticos
@@ -312,23 +406,47 @@ frontend/
 
 ## Navegación de la Aplicación 📱
 
-### 1. Página de Inicio (Home)
+### 0. Página de Login/Registro
 
-**Ruta:** `/home`
+**Ruta:** `/login`
 
 **Funcionalidad:**
 
-- Muestra todas las galerías del usuario en un grid responsive
+- Formulario de inicio de sesión
+- Formulario de registro de nuevos usuarios
+- Toggle entre login y registro
+- Validación de campos
+- Redirección automática a /home tras autenticación exitosa
+
+**Campos:**
+
+- **Login:** Email y contraseña
+- **Registro:** Nombre, email y contraseña (mínimo 6 caracteres)
+
+### 1. Página de Inicio (Home)
+
+**Ruta:** `/home` (requiere autenticación)
+
+**Funcionalidad:**
+
+- Muestra todas las galerías del usuario autenticado en un grid responsive
+- **Filtro por categorías** con ion-segment
+- Botón de acceso al perfil de usuario
+- Botón de gestión de categorías
 - Cada tarjeta de galería muestra:
   - Preview de la primera imagen (si existe)
   - Nombre de la galería
+  - Categoría asignada
   - Contador de imágenes
   - Menú de opciones (tres puntos)
 
 **Acciones disponibles:**
 
 - **Click en galería:** Abre el detalle de la galería
-- **Botón FAB (+):** Crea una nueva galería
+- **Botón FAB (+):** Crea una nueva galería (con opción de asignar categoría)
+- **Filtro de categorías:** Muestra solo galerías de la categoría seleccionada
+- **Icono de perfil:** Navega a la página de perfil
+- **Botón de categorías:** Navega a gestión de categorías
 - **Menú (⋮):**
   - Editar nombre de la galería
   - Eliminar galería (con advertencia de imágenes)
@@ -352,7 +470,9 @@ frontend/
 **Acciones disponibles:**
 
 - **Click en imagen:** Abre el visor de imagen a pantalla completa
-- **Botón FAB (+):** Sube una nueva imagen
+- **Botón FAB (+):** Añade una nueva imagen
+  - Opción 1: Tomar foto con la cámara
+  - Opción 2: Seleccionar del dispositivo
 - **Menú (⋮):**
   - Editar nombre y descripción de la imagen
   - Eliminar imagen
@@ -362,7 +482,42 @@ frontend/
 
 - Si no hay imágenes, muestra un diseño especial invitando a subir la primera imagen
 
-### 3. Visor de Imágenes
+### 3. Gestión de Categorías
+
+**Ruta:** `/categories` (requiere autenticación)
+
+**Funcionalidad:**
+
+- Lista todas las categorías del usuario
+- Crear nuevas categorías
+- Editar categorías existentes
+- Eliminar categorías
+
+**Acciones disponibles:**
+
+- **Botón FAB (+):** Crear nueva categoría
+- **Botón editar:** Modificar nombre y descripción
+- **Botón eliminar:** Eliminar categoría (las galerías quedan sin categoría)
+- **Botón volver:** Regresa a home
+
+### 4. Perfil de Usuario
+
+**Ruta:** `/profile` (requiere autenticación)
+
+**Funcionalidad:**
+
+- Muestra información del usuario autenticado
+- Avatar con icono de usuario
+- Nombre y email
+- Opciones de edición y cierre de sesión
+
+**Acciones disponibles:**
+
+- **Editar perfil:** Modificar nombre y email
+- **Cerrar sesión:** Logout y redirección a /login
+- **Botón volver:** Regresa a home
+
+### 5. Visor de Imágenes
 
 **Funcionalidad:**
 
@@ -380,17 +535,39 @@ frontend/
 
 ## Características Principales ✨
 
+### Autenticación y Usuarios
+
+- ✅ **Sistema de registro** con validación de email
+- ✅ **Login con JWT** - Tokens con expiración de 7 días
+- ✅ **Encriptación de contraseñas** con bcrypt
+- ✅ **Guards de autenticación** - Rutas protegidas
+- ✅ **Interceptor HTTP** - Token automático en todas las peticiones
+- ✅ **Gestión de perfil** - Editar nombre y email
+- ✅ **Cierre de sesión** - Limpieza de token y redirección
+
+### Gestión de Categorías
+
+- ✅ **CRUD completo de categorías**
+- ✅ Crear categorías con nombre y descripción
+- ✅ Editar categorías existentes
+- ✅ Eliminar categorías
+- ✅ **Filtrar galerías por categoría**
+- ✅ Asignar categoría al crear galería
+
 ### Gestión de Galerías
 
-- ✅ Crear galerías con nombre personalizado
+- ✅ Crear galerías con nombre personalizado y categoría opcional
 - ✅ Editar nombre de galerías existentes
 - ✅ Eliminar galerías (elimina imágenes en cascada)
 - ✅ Vista previa de la primera imagen
 - ✅ Contador de imágenes por galería
+- ✅ **Filtro por categoría** con ion-segment
+- ✅ **Aislamiento por usuario** - Solo ve sus propias galerías
 
 ### Gestión de Imágenes
 
-- ✅ Subir imágenes (JPEG, JPG, PNG, GIF, WEBP)
+- ✅ **Capturar foto con cámara** (Capacitor Camera)
+- ✅ Subir imágenes desde dispositivo (JPEG, JPG, PNG, GIF, WEBP)
 - ✅ Límite de tamaño: 5MB por imagen (validación en frontend)
 - ✅ Campos opcionales: nombre y descripción
 - ✅ Editar nombre y descripción de imágenes
@@ -425,14 +602,42 @@ frontend/
 
 ## Servicios HTTP 🔌
 
+### AuthService
+
+```typescript
+register(name, email, password); // Registrar nuevo usuario
+login(email, password); // Iniciar sesión
+logout(); // Cerrar sesión
+getMe(); // Obtener usuario actual
+getToken(); // Obtener JWT token
+isLoggedIn(); // Verificar si está autenticado
+```
+
+### UserService
+
+```typescript
+update(id, name, email); // Actualizar perfil de usuario
+delete(id); // Eliminar cuenta de usuario
+```
+
+### CategoryService
+
+```typescript
+getAll(); // Obtener todas las categorías del usuario
+getOne(id); // Obtener categoría específica
+create(name, description); // Crear nueva categoría
+update(id, name, description); // Actualizar categoría
+delete(id); // Eliminar categoría
+```
+
 ### GalleryService
 
 ```typescript
-getAll(page, limit); // Obtener todas las galerías con paginación
-getOne(id); // Obtener una galería específica con sus imágenes
-create(name); // Crear nueva galería
+getAll(page, limit, categoryId); // Obtener galerías con filtro opcional
+getOne(id); // Obtener una galería específica
+create(name, categoryId); // Crear nueva galería con categoría opcional
 update(id, name); // Actualizar nombre de galería
-delete id; // Eliminar galería
+delete(id); // Eliminar galería
 ```
 
 ### ImageService
@@ -441,22 +646,40 @@ delete id; // Eliminar galería
 getAll(galleryId); // Obtener todas las imágenes de una galería
 create(galleryId, formData); // Subir nueva imagen
 update(id, formData); // Actualizar nombre y descripción
-delete id; // Eliminar imagen
+delete(id); // Eliminar imagen
 ```
 
 ## Flujo de Trabajo del Usuario 👤
 
+### Registro e inicio de sesión:
+
+1. Usuario abre la aplicación → Ve página de login
+2. Si no tiene cuenta → Click en "Regístrate"
+3. Introduce nombre, email y contraseña → Click en "Registrarse"
+4. Automáticamente inicia sesión → Recibe JWT token
+5. Redirigido a /home
+
+### Gestionar categorías:
+
+1. Desde home → Click en botón de gestión de categorías
+2. Click en botón FAB (+) → Introduce nombre y descripción
+3. Categoría creada → Aparece en la lista
+4. Puede editar o eliminar categorías existentes
+
 ### Crear y gestionar galerías:
 
-1. Usuario entra a la aplicación → Ve página de inicio
-2. Click en botón FAB (+) → Introduce nombre de galería
+1. Usuario entra a home → Ve sus galerías
+2. Click en botón FAB (+) → Introduce nombre y selecciona categoría (opcional)
 3. Galería creada → Aparece en el grid
-4. Click en menú (⋮) → Puede editar o eliminar
+4. Puede filtrar galerías por categoría usando el segment
+5. Click en menú (⋮) → Puede editar o eliminar
 
 ### Subir y gestionar imágenes:
 
 1. Click en una galería → Entra al detalle
-2. Click en botón FAB (+) → Selecciona imagen del dispositivo
+2. Click en botón FAB (+) → Elige entre:
+   - **Tomar foto:** Abre la cámara del dispositivo para capturar una foto
+   - **Seleccionar del dispositivo:** Abre el selector de archivos
 3. Introduce nombre y descripción (opcional) → Sube imagen
 4. Imagen aparece en el grid
 5. Click en menú (⋮) → Puede editar o eliminar
@@ -474,6 +697,7 @@ delete id; // Eliminar imagen
 - [TypeScript](https://www.typescriptlang.org/) - Lenguaje de programación
 - [RxJS](https://rxjs.dev/) - Programación reactiva
 - [Ionic Components](https://ionicframework.com/docs/components) - Componentes UI nativos
+- [Capacitor Camera](https://capacitorjs.com/docs/apis/camera) - API de cámara nativa
 - [SCSS](https://sass-lang.com/) - Preprocesador CSS
 
 ## Scripts Disponibles 📌
@@ -505,17 +729,42 @@ Los archivos compilados estarán en `www/`
 
 ## Características de Seguridad 🔐
 
+- **Autenticación JWT** - Tokens seguros con expiración
+- **Encriptación de contraseñas** - Bcrypt en backend
+- **Guards de autenticación** - Protección de rutas
+- **Interceptor HTTP** - Token automático en peticiones
+- **Aislamiento de datos** - Cada usuario solo ve sus recursos
 - Validación de tipos de archivo en frontend
 - Validación de tamaño de archivo (5MB máximo)
 - Sanitización de inputs
 - Manejo seguro de errores HTTP
 - CORS configurado en backend
 
+## Componentes Ionic Utilizados 📱
+
+- ✅ ion-header
+- ✅ ion-toolbar
+- ✅ ion-title
+- ✅ ion-content
+- ✅ ion-button
+- ✅ ion-icon
+- ✅ ion-fab + ion-fab-button
+- ✅ ion-buttons
+- ✅ ion-item
+- ✅ ion-label
+- ✅ ion-input (con labelPlacement="floating")
+- ✅ ion-list
+- ✅ ion-segment + ion-segment-button
+- ✅ AlertController
+- ✅ ActionSheetController
+
 ## Mejoras Futuras 🔮
 
-- [ ] Autenticación de usuarios
+- [x] Autenticación de usuarios ✅
+- [x] Sistema de categorías ✅
+- [x] Captura de fotos con cámara ✅
 - [ ] Compartir galerías entre usuarios
-- [ ] Filtros y búsqueda de imágenes
+- [ ] Búsqueda de imágenes
 - [ ] Ordenar imágenes por drag & drop
 - [ ] Zoom en visor de imágenes
 - [ ] Descargar imágenes

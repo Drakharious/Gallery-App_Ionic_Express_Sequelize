@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GalleryService } from '../services/gallery.service';
 import { ImageService } from '../services/image.service';
 import { AlertController, ActionSheetController } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-gallery-detail',
@@ -50,7 +51,49 @@ export class GalleryDetailPage implements OnInit {
     });
   }
 
-  uploadImage() {
+  async uploadImage() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Añadir imagen',
+      buttons: [
+        {
+          text: 'Tomar foto',
+          icon: 'camera',
+          handler: () => this.takePhoto()
+        },
+        {
+          text: 'Seleccionar del dispositivo',
+          icon: 'images',
+          handler: () => this.selectFromDevice()
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          icon: 'close'
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
+
+  async takePhoto() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera
+      });
+
+      const blob = await this.dataUrlToBlob(image.dataUrl!);
+      const file = new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+      
+      this.showUploadDialog(file);
+    } catch (error) {
+      console.error('Error taking photo:', error);
+    }
+  }
+
+  selectFromDevice() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -65,6 +108,11 @@ export class GalleryDetailPage implements OnInit {
       }
     };
     input.click();
+  }
+
+  async dataUrlToBlob(dataUrl: string): Promise<Blob> {
+    const response = await fetch(dataUrl);
+    return await response.blob();
   }
 
   async showUploadDialog(file: File) {

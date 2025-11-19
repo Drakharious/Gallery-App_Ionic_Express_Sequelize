@@ -1,0 +1,80 @@
+<ion-content [fullscreen]="true" class="futuristic-bg">
+  
+  <div class="login-container">
+    
+    <div class="login-card">
+      <div class="card-glow"></div>
+      
+      <div class="login-content">
+        <div class="logo-section">
+          <ion-icon name="images-outline" class="logo-icon"></ion-icon>
+          <h1 class="app-title">Galleries App</h1>
+        </div>
+
+        <div class="form-section">
+          <h2 class="form-title">{{ isLogin ? 'Iniciar Sesión' : 'Registrarse' }}</h2>
+          
+          <form (ngSubmit)="onSubmit()">
+            
+            <ion-item class="input-item" *ngIf="!isLogin" [class.error-item]="nameError">
+              <ion-input 
+                label="Nombre" 
+                labelPlacement="floating"
+                type="text" 
+                [(ngModel)]="name" 
+                name="name"
+                (ionBlur)="validateName()"
+                required>
+              </ion-input>
+            </ion-item>
+            <div class="error-message" *ngIf="nameError && !isLogin">{{ nameError }}</div>
+
+            <ion-item class="input-item" [class.error-item]="emailError">
+              <ion-input 
+                label="Email" 
+                labelPlacement="floating"
+                type="email" 
+                [(ngModel)]="email" 
+                name="email"
+                (ionBlur)="validateEmail()"
+                required>
+              </ion-input>
+            </ion-item>
+            <div class="error-message" *ngIf="emailError">{{ emailError }}</div>
+
+            <ion-item class="input-item" [class.error-item]="passwordError">
+              <ion-input 
+                label="Contraseña" 
+                labelPlacement="floating"
+                type="password" 
+                [(ngModel)]="password" 
+                name="password"
+                (ionBlur)="validatePassword()"
+                required>
+              </ion-input>
+            </ion-item>
+            <div class="error-message" *ngIf="passwordError">{{ passwordError }}</div>
+
+            <ion-button 
+              expand="block" 
+              type="submit" 
+              class="submit-btn">
+              {{ isLogin ? 'Entrar' : 'Registrarse' }}
+            </ion-button>
+          </form>
+
+          <div class="toggle-section">
+            <p class="toggle-text">
+              {{ isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+              <span class="toggle-link" (click)="toggleMode()">
+                {{ isLogin ? 'Regístrate' : 'Inicia sesión' }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,124 @@
+.futuristic-bg {
+  --background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+.glass-toolbar {
+  --background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  --border-width: 0 0 1px 0;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.back-icon {
+  color: #00d4ff;
+  font-size: 1.5rem;
+}
+
+.futuristic-title {
+  font-weight: 700;
+  font-size: 1.4rem;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  font-size: 1.8rem;
+  color: #00d4ff;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+.profile-card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(123, 47, 247, 0.3));
+  opacity: 0.5;
+}
+
+.profile-content {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px 30px;
+}
+
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+}
+
+.avatar-icon {
+  font-size: 60px;
+  color: #fff;
+}
+
+.info-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.user-name {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.user-email {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.actions-section {
+  margin-top: 20px;
+}
+
+.edit-btn {
+  --background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  --border-radius: 12px;
+  font-weight: 600;
+  text-transform: none;
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.logout-btn {
+  --background: rgba(255, 59, 48, 0.8);
+  --border-radius: 12px;
+  font-weight: 600;
+  text-transform: none;
+  height: 50px;
+}

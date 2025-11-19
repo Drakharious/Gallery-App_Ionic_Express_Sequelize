@@ -12,7 +12,9 @@ exports.create = async (req, res, next) => {
             return next(new AppError('No image file provided', 400));
         }
 
-        const gallery = await Gallery.findByPk(req.params.galleryId);
+        const gallery = await Gallery.findOne({
+            where: { id: req.params.galleryId, userId: req.user.id }
+        });
         if (!gallery) {
             fs.unlinkSync(req.file.path);
             return next(new AppError('Gallery not found', 404));
@@ -44,6 +46,13 @@ exports.create = async (req, res, next) => {
 
 exports.findAll = async (req, res, next) => {
     try {
+        const gallery = await Gallery.findOne({
+            where: { id: req.params.galleryId, userId: req.user.id }
+        });
+        if (!gallery) {
+            return next(new AppError('Gallery not found', 404));
+        }
+
         const images = await Image.findAll({
             where: { galleryId: req.params.galleryId },
             order: [['id', 'DESC']]
@@ -68,7 +77,9 @@ exports.findOne = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
     try {
-        const image = await Image.findByPk(req.params.id);
+        const image = await Image.findByPk(req.params.id, {
+            include: [{ model: Gallery, required: true, where: { userId: req.user.id } }]
+        });
         if (!image) {
             return next(new AppError('Image not found', 404));
         }
@@ -90,7 +101,9 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
     try {
-        const image = await Image.findByPk(req.params.id);
+        const image = await Image.findByPk(req.params.id, {
+            include: [{ model: Gallery, required: true, where: { userId: req.user.id } }]
+        });
         if (!image) {
             return next(new AppError('Image not found', 404));
         }

@@ -1,0 +1,130 @@
+.futuristic-bg {
+  --background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+.glass-toolbar {
+  --background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  --border-width: 0 0 1px 0;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.back-icon {
+  color: #00d4ff;
+  font-size: 1.5rem;
+}
+
+.futuristic-title {
+  font-weight: 700;
+  font-size: 1.4rem;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  font-size: 1.8rem;
+  color: #00d4ff;
+}
+
+.content-wrapper {
+  padding: 20px;
+  min-height: 100%;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.empty-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 47, 247, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+.empty-icon {
+  font-size: 60px;
+  color: #00d4ff;
+}
+
+.empty-title {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.empty-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.create-btn {
+  --background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  --border-radius: 25px;
+  font-weight: 600;
+  text-transform: none;
+  height: 50px;
+  padding: 0 30px;
+}
+
+.categories-list {
+  background: transparent;
+  padding-bottom: 80px;
+}
+
+.category-item {
+  --background: rgba(255, 255, 255, 0.05);
+  --border-radius: 15px;
+  --padding-start: 20px;
+  --padding-end: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+  border-radius: 15px;
+}
+
+.category-icon {
+  color: #00d4ff;
+  font-size: 1.8rem;
+  margin-right: 10px;
+}
+
+.category-name {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.category-desc {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin: 5px 0 0 0;
+}
+
+.fab-futuristic {
+  --background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+  --box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}

@@ -42,4 +42,4 @@ const imageValidation = {
     ]
 };
 
-module.exports = { galleryValidation, imageValidation };
+module.exports = { galleryValidation, imageValidation, validate };

@@ -1,0 +1,134 @@
+.futuristic-bg {
+  --background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(123, 47, 247, 0.3));
+  opacity: 0.5;
+}
+
+.login-content {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px 30px;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-icon {
+  font-size: 80px;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-title {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 10px 0 0 0;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.form-section {
+  margin-top: 20px;
+}
+
+.form-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.input-item {
+  --background: rgba(255, 255, 255, 0.05);
+  --border-radius: 12px;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --highlight-color-focused: #00d4ff;
+  margin-bottom: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+
+  ion-input {
+    --color: #fff;
+    --placeholder-color: rgba(255, 255, 255, 0.5);
+  }
+
+  &.error-item {
+    border-color: #ff3b30;
+    --highlight-color-focused: #ff3b30;
+  }
+}
+
+.error-message {
+  color: #ff3b30;
+  font-size: 0.85rem;
+  padding: 5px 15px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.submit-btn {
+  --background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  --border-radius: 12px;
+  font-weight: 600;
+  text-transform: none;
+  height: 50px;
+  margin-top: 20px;
+}
+
+.toggle-section {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.toggle-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.toggle-link {
+  color: #00d4ff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 5px;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}

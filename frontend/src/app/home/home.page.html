@@ -4,12 +4,44 @@
       <ion-icon name="images-outline" class="title-icon"></ion-icon>
       Mis Galerías
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToProfile()">
+        <ion-icon name="person-circle-outline" class="user-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="futuristic-bg">
   
   <div class="content-wrapper">
+    
+    <div class="filter-section" *ngIf="categories.length > 0">
+      <ion-button fill="clear" class="scroll-arrow" (click)="scrollCategories('left')" *ngIf="showLeftArrow">
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+      </ion-button>
+      <div class="segment-wrapper" #segmentWrapper (scroll)="onSegmentScroll()">
+        <ion-segment [value]="selectedCategoryId" (ionChange)="filterByCategory($event.detail.value)" class="category-segment" scrollable>
+          <ion-segment-button value="null">
+            <ion-label>Todas</ion-label>
+          </ion-segment-button>
+          <ion-segment-button *ngFor="let category of categories" [value]="category.id">
+            <ion-label>{{ category.name }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+      <ion-button fill="clear" class="scroll-arrow" (click)="scrollCategories('right')" *ngIf="showRightArrow">
+        <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="manage-categories-btn" (click)="goToCategories()">
+        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-button *ngIf="categories.length === 0" expand="block" fill="outline" class="categories-link" (click)="goToCategories()">
+      <ion-icon slot="start" name="folder-outline"></ion-icon>
+      Gestionar Categorías
+    </ion-button>
     
     <!-- Empty State -->
     <div *ngIf="!loading && galleries.length === 0" class="empty-state">
@@ -30,9 +62,9 @@
         <div class="card-glow"></div>
         <div class="card-content">
           <div class="gallery-preview">
-            <ion-icon *ngIf="!gallery.images || gallery.images.length === 0" name="image-outline" class="preview-icon"></ion-icon>
-            <img *ngIf="gallery.images && gallery.images.length > 0" 
-                 [src]="'http://localhost:8080/uploads/' + gallery.images[0].imageFile" 
+            <ion-icon *ngIf="!getCoverImage(gallery)" name="image-outline" class="preview-icon"></ion-icon>
+            <img *ngIf="getCoverImage(gallery)" 
+                 [src]="'http://localhost:8080/uploads/' + getCoverImage(gallery)" 
                  class="preview-img" />
           </div>
           <div class="gallery-info">

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
   
-  endpoint = 'http://localhost:8080/api/images';
+  endpoint = `${API_CONFIG.BASE_URL}/images`;
 
   constructor(private httpClient: HttpClient) { }
 

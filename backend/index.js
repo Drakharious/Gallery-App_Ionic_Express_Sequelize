@@ -38,7 +38,7 @@ const db = require("./models");
 
 const syncDatabase = async () => {
     try {
-        await db.sequelize.sync();
+        await db.sequelize.sync({ alter: true });
         logger.info('Database synced successfully');
     } catch (error) {
         logger.error('Database sync failed:', error);
@@ -52,6 +52,9 @@ app.get("/", (req, res) => {
     res.json({ message: "Welcome to galleries application." });
 });
 
+require("./routes/auth.routes.js")(app);
+require("./routes/user.routes.js")(app);
+require("./routes/category.routes.js")(app);
 require("./routes/gallery.routes.js")(app);
 require("./routes/image.routes.js")(app);
 

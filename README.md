@@ -116,6 +116,7 @@ JWT_SECRET=GalleriesApp2024SecretKeyForJWTTokensDoNotShare
 ```
 
 **Nota sobre JWT_SECRET:** Esta es una clave secreta que usa la aplicación para firmar los tokens de autenticación. Puedes usar cualquier texto largo y único. **NO es la contraseña de MySQL**. Ejemplos válidos:
+
 - `GalleriesApp2024SecretKeyForJWTTokensDoNotShare`
 - `miClaveSecretaSuperLarga123456789`
 - O genera una aleatoria con: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
@@ -617,7 +618,7 @@ isLoggedIn(); // Verificar si está autenticado
 
 ```typescript
 update(id, name, email); // Actualizar perfil de usuario
-delete(id); // Eliminar cuenta de usuario
+delete id; // Eliminar cuenta de usuario
 ```
 
 ### CategoryService
@@ -627,7 +628,7 @@ getAll(); // Obtener todas las categorías del usuario
 getOne(id); // Obtener categoría específica
 create(name, description); // Crear nueva categoría
 update(id, name, description); // Actualizar categoría
-delete(id); // Eliminar categoría
+delete id; // Eliminar categoría
 ```
 
 ### GalleryService
@@ -637,7 +638,7 @@ getAll(page, limit, categoryId); // Obtener galerías con filtro opcional
 getOne(id); // Obtener una galería específica
 create(name, categoryId); // Crear nueva galería con categoría opcional
 update(id, name); // Actualizar nombre de galería
-delete(id); // Eliminar galería
+delete id; // Eliminar galería
 ```
 
 ### ImageService
@@ -646,7 +647,7 @@ delete(id); // Eliminar galería
 getAll(galleryId); // Obtener todas las imágenes de una galería
 create(galleryId, formData); // Subir nueva imagen
 update(id, formData); // Actualizar nombre y descripción
-delete(id); // Eliminar imagen
+delete id; // Eliminar imagen
 ```
 
 ## Flujo de Trabajo del Usuario 👤
@@ -758,6 +759,37 @@ Los archivos compilados estarán en `www/`
 - ✅ AlertController
 - ✅ ActionSheetController
 
+## 📸 Probar la Aplicación con Cámara
+
+### En Navegador Web (Cámara del Ordenador)
+
+**⚠️ Limitación:** En navegador, la cámara usa la webcam del ordenador mediante PWA Elements (interfaz simulada), pero cumple con la funcionalidad prometida.
+
+3. Navega a una galería → Click en botón FAB (+) → "Tomar foto"
+4. El navegador pedirá permiso para acceder a la webcam
+5. Captura la foto y se subirá automáticamente
+
+## 🔐 Nuevas Funcionalidades
+
+### Autenticación (UT5):
+
+- ✅ Sistema de registro/login
+- ✅ JWT tokens (Bearer)
+- ✅ Encriptación de contraseñas con bcrypt
+- ✅ Middleware de autenticación en todas las rutas protegidas
+
+### CRUDs Adicionales (UT2):
+
+- ✅ CRUD de Usuarios (perfil)
+- ✅ CRUD de Categorías
+- ✅ Relaciones: User → Categories → Galleries → Images
+
+### Componentes Ionic Adicionales:
+
+- ✅ ion-segment (filtro de categorías)
+- ✅ ion-list + ion-item (lista de categorías)
+- ✅ ion-input con labelPlacement="floating" (login/register)
+
 ## Mejoras Futuras 🔮
 
 - [x] Autenticación de usuarios ✅
@@ -790,6 +822,7 @@ Los archivos compilados estarán en `www/`
 - Verifica que la imagen sea menor a 5MB
 - Comprueba que el formato sea válido (JPEG, JPG, PNG, GIF, WEBP)
 - Revisa la consola del navegador para errores específicos
+- Revisa que tu dispositivo reconozca la cámara conectada al mismo
 
 ## Autor ✒️
 
